@@ -1,0 +1,64 @@
+<template>
+  <User :nav="navItems"/>
+  <div class="background">
+    <Table :elements="elements" :optionValues="optionValues"/>
+  </div>
+</template>
+
+<script setup>
+import { ref, watch } from 'vue'
+import Table from '~/components/Table.vue'
+import User from '~/layouts/User.vue'
+import { getEmptyNav } from '~/assets/getNav'
+import { messages } from '~/assets/messages'
+import { useUser } from '~/assets/useUser'
+import { useFetch } from '#imports'
+
+const optionValues = ['Info', 'Validar', 'Invalidar']
+const navItems = getEmptyNav()
+const elements = ref([])
+const { getUserId } = useUser()
+
+const userId = getUserId()
+
+const { data: loansData, error: loansError, refresh: refreshLoans } = useFetch(
+  () => userId ? `http://localhost:4000/api/loans/technician/${userId}` : null,
+  {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    // server: false // descomentar si solo quieres petición en cliente
+  }
+)
+
+watch(loansData, (loans) => {
+  if (!userId) {
+    messages.value.push('Usuario no autenticado')
+    return
+  }
+  if (!loans) return
+
+  if (Array.isArray(loans) && loans.length > 0) {
+    elements.value = loans.map((loan) => ({ id: loan.id, value: loan.reader.name }))
+    messages.value.push('Se han realizado ' + loans.length + ' préstamos en tu sala')
+  } else {
+    elements.value = []
+    messages.value.push('No tienes entregas aún ¿Qué tal si pides algún libro (Obtener)?')
+  }
+})
+
+watch(loansError, (err) => {
+  if (err && err.value) messages.value.push('Error al cargar las entregas: ' + (err.value.message || err.value))
+})
+</script>
+
+<style scoped>
+.background {
+  background-color: #d9d9d9;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+</style>
