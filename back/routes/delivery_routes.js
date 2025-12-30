@@ -194,7 +194,7 @@ router.put('/update/:id', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.delete('/delete/:id', authenticate(["reader"]), async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   try {
     const result = await deleteDelivery(req.params.id);
     res.status(200).json(result);
@@ -233,7 +233,7 @@ router.delete('/delete/:id', authenticate(["reader"]), async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.get('/loans/:id', authenticate(["reader", "dealer"]), async (req, res) => {
+router.get('/loans/:id', async (req, res) => {
   try {
     const result = await getLoansByDeliveryId(req.params.id);
     res.status(200).json(result);
@@ -270,7 +270,7 @@ router.get('/loans/:id', authenticate(["reader", "dealer"]), async (req, res) =>
  *       500:
  *         description: Internal server error
  */
-router.get('/user/:userId', authenticate(["reader"]), async (req, res) => {
+router.get('/user/:userId', async (req, res) => {
   try {
     const result = await getDeliveriesByUserId(req.params.userId);
     res.status(200).json(result);
@@ -314,7 +314,7 @@ router.get('/user/:userId', authenticate(["reader"]), async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.post('/add-loan/:userId', authenticate(["technician"]), async (req, res) => {
+router.post('/add-loan/:userId', async (req, res) => {
   try {
     const result = await addLoanToDelivery(req.params.userId);
     res.status(200).json({ deliveryId: result });

@@ -44,9 +44,6 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      deletedAt: {
-        type: Sequelize.DATE
-      }
     });
   },
 

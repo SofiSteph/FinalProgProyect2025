@@ -1,5 +1,5 @@
 const jwt = ("jsonwebtoken");
-const appError = require("../errors/appError");
+const AppError = require("../errors/appError");
 
 const authenticate = (roles) => {
     return function (req, res, next) {

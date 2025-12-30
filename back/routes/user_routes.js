@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, getAllUsers, getUserById, updateUser, deleteUser, getUserByUsername, assignRoleToUser, getRandomDealer } = require("../controllers/user_controller");
+const jwt = require('jsonwebtoken');
+const { createUser, getAllUsers, getUserById, updateUser, deleteUser, getUserByUsername, assignRoleToUser, getRandomDealer} = require("../controllers/user_controller");
 const logger = require('../logger/logger');
 
 /**
@@ -52,6 +53,7 @@ router.post('/create', async (req, res) => {
     }
   }
 });
+
 
 /**
  * @swagger
@@ -340,3 +342,4 @@ router.get('/random-dealer', async (req, res) => {
 });
 
 module.exports = router;
+

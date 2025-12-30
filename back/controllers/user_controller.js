@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Role = require('../models/role');
+const jwt = require('jsonwebtoken');
 
 // Obtener un dealer aleatorio
 const getRandomDealer = async () => {
@@ -138,7 +139,12 @@ const deleteUser = async (id) => {
 // Obtener un User por username
 const getUserByUsername = async (username) => {
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({ 
+      where: { username },
+      include: [
+        { model: Role}
+      ] 
+    });
 
     if (!user) {
       throw new Error('User no encontrado');
@@ -177,12 +183,12 @@ const assignRoleToUser = async (userId, roleId) => {
 };
 
 module.exports = {
-  createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
   getUserByUsername,
   assignRoleToUser,
-  getRandomDealer
+  getRandomDealer,
+  createUser,
 };

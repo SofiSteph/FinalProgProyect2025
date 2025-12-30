@@ -3,7 +3,7 @@ const router = express.Router();
 const { createBook, getAllBooks, getBookById, toLoan, updateBook, deleteBook } = require("../controllers/book_controller");
 const upload = require('../middlewares/multerConfig');
 const logger = require('../logger/logger');
-const authenticate = require("../middlewares/authMiddleware")
+
 /**
  * @swagger
  * /api/books/create:
@@ -137,7 +137,7 @@ router.post('/create', upload.single('productImage'), async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.get('/', authenticate(["reader"]), async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const result = await getAllBooks();
     res.status(200).json(result);

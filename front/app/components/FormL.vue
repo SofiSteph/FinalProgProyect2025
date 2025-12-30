@@ -7,12 +7,12 @@
     <form class="w-full max-w-md bg-white/5 p-6 rounded-md space-y-8 form" @submit.prevent="handleSubmit">
       <!-- Nombre de usuario -->
       <div class="mb-6">
-        <input id="usuario" v-model="form.usuario" type="text" class="bg-inputsBg text-inputsText" placeholder="Usuario" />
+        <FormsInput id="usuario" v-model="form.usuario" type="text" placeholder="Usuario" />
       </div>
 
         <!-- Contraseña -->
       <div class="mb-6">
-        <input id="contraseña" v-model="form.contraseña" type="password" class="bg-inputsBg text-inputsText" placeholder="Contraseña" />
+        <FormsInput id="contraseña" v-model="form.contraseña" type="password" placeholder="Contraseña" />
       </div>
 
       <div class="buttons-nav">
@@ -116,7 +116,6 @@ onMounted(() => {
 watch(form, (newData) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
 });
-
 </script>
 
 <style scoped>

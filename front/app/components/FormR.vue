@@ -7,23 +7,23 @@
     <form class="w-full max-w-md bg-white/5 p-6 rounded-md space-y-8 form" @submit.prevent="handleSubmit">
       <!-- Nombre -->
       <div class="mb-6">
-        <input id="nombre" v-model="form.nombre" type="text" class="bg-inputsBg text-inputsText" placeholder="Nombre" />
+        <FormsInput id="nombre" v-model="form.nombre" type="text" placeholder="Nombre" />
       </div>
 
       <!-- Email -->
       <div class="mb-6">
-        <input id="email" v-model="form.email" type="email" class="bg-inputsBg text-inputsText" placeholder="Email" />
+        <FormsInput id="email" v-model="form.email" type="email" placeholder="Email" />
       </div>
 
       <!-- Nombre de usuario -->
       <div class="mb-6">
-        <input id="usuario" v-model="form.usuario" type="text" class="bg-inputsBg text-inputsText" placeholder="Usuario" />
+        <FormsInput id="usuario" v-model="form.usuario" type="text" placeholder="Usuario" />
       </div>
 
       <!-- Contraseña -->
       <div class="mb-6">
-        <input id="contraseña" v-model="form.contraseña" type="text" class="bg-inputsBg text-inputsText" placeholder="Contraseña" />
-      </div> 
+        <FormsInput id="contraseña" v-model="form.contraseña" type="text" placeholder="Contraseña" />
+      </div>
 
       <!-- Rol -->
       <div class="mb-6">
@@ -63,6 +63,7 @@ import { reactive, ref, onMounted, watch} from 'vue'
 import { navigateTo } from '#app'
 import { useUser } from '~/assets/useUser'
 import { messages } from '~/assets/messages'
+
 const { setUserId } = useUser()
 const theme = ref("light");
 

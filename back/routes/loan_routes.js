@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../logger/logger');
 const { createLoan, getAllLoans, getLoanById, updateLoan, validateLoan, deleteLoan, getLoansByIdTechnician} = require("../controllers/loan_controller");
-const authenticate = require("../middlewares/authMiddleware")
 
 /**
  * @swagger
@@ -57,7 +56,7 @@ const authenticate = require("../middlewares/authMiddleware")
  *       500:
  *         description: Internal server error
  */
-router.post('/create',  authenticate(["technician"]), async (req, res) => {
+router.post('/create', async (req, res) => {
   try {
     const result = await createLoan(req.body);
     res.status(201).json({
@@ -260,7 +259,7 @@ router.put('/update/:id', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.put('/validate/:id',  authenticate(["technician"]), async (req, res) => {
+router.put('/validate/:id', async (req, res) => {
   try {
     const result = await validateLoan(req.params.id);
     res.status(200).json(result);
@@ -295,7 +294,7 @@ router.put('/validate/:id',  authenticate(["technician"]), async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.delete('/delete/:id',  authenticate(["technician"]), async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   try {
     const result = await deleteLoan(req.params.id);
     res.status(200).json(result);

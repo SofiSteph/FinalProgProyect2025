@@ -1,0 +1,8 @@
+Pasos para correr el servidor del backend: 
+1- npm install
+2- Crear .env con los datos correspondientes 
+3- Comando "node app.js"
+
+Pasos para correr el servidor del frontend
+1- npm install
+2- npm run dev
