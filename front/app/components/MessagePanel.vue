@@ -1,5 +1,5 @@
 <template>
-  <div v-if="messages && messages.length > 0" class="message-panel" :style="{ left: panelPosition.x + 'px', top: panelPosition.y + 'px' }" @mousedown="startDrag">
+  <div v-if="messages && messages.length > 0" class="message-panel" ref="panelRef" :style="{ left: panelPosition.x + 'px', top: panelPosition.y + 'px' }" @mousedown="startDrag">
     <div class="panel-header">
       <button class="close-btn" @click="$emit('close')">X</button>
     </div>
@@ -21,6 +21,7 @@ defineEmits<{
   close: []
 }>()
 
+const panelRef = ref<HTMLElement | null>(null)
 const panelPosition = reactive({ x: 10, y: 0 })
 
 onMounted(() => {
@@ -41,6 +42,14 @@ function drag(event: MouseEvent) {
   if (isDragging.value) {
     panelPosition.x = event.clientX - dragOffset.x
     panelPosition.y = event.clientY - dragOffset.y
+
+    // Constrain the panel within the visible screen boundaries
+    if (panelRef.value) {
+      const panelWidth = panelRef.value.offsetWidth
+      const panelHeight = panelRef.value.offsetHeight
+      panelPosition.x = Math.max(0, Math.min(panelPosition.x, window.innerWidth - panelWidth))
+      panelPosition.y = Math.max(0, Math.min(panelPosition.y, window.innerHeight - panelHeight))
+    }
   }
 }
 
@@ -54,9 +63,10 @@ function stopDrag() {
 <style scoped>
 .message-panel {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+  background-color: var(--accent-color);
+  color: var(--primary-color);
   padding: 10px;
+  border: 3px solid  var(--secondary-color);
   border-radius: 5px;
   max-width: 300px;
   z-index: 10000;
@@ -73,14 +83,14 @@ function stopDrag() {
 .close-btn {
   background: none;
   border: none;
-  color: white;
+  color: var(--primary-color);
   font-size: 16px;
   cursor: pointer;
   padding: 0;
 }
 
 .close-btn:hover {
-  color: #ccc;
+  color: var(--primary-color);
 }
 
 .message {

@@ -22,7 +22,7 @@ import { messages } from '~/assets/messages'
   left: 0;
   width: 100%;            /* ocupa todo el ancho de la pantalla */
   height: 50px;
-  background-color: #93877e;
+  background-color: var(--secondary-color);
   z-index: 2000;           /* por si hay contenido debajo */
 }
 

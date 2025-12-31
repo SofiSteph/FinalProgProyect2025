@@ -1,7 +1,7 @@
 <template>
   <aside :class="['sidebar', { 'sidebar-collapsed': collapsed }]" aria-label="Panel lateral">
     <div class="avatar-container">
-      <img @click="toggle" src="/public/user.png" alt="Avatar" width="150" height="150" style="border-radius:50%; object-fit:cover;">
+      <img @click="toggle" src="/user.png" alt="Avatar" width="150" height="150" style="border-radius:50%; object-fit:cover;">
     </div>
 
     <!-- Contenido desplazable -->
@@ -39,9 +39,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useUser } from '~/assets/useUser'
 import { formatText } from '@/assets/formatText'
-const { getUserId } = useUser()
 
 // Estado del sidebar
 const collapsed = ref(false)
@@ -63,7 +61,7 @@ function toggle() {
 }
 
 onMounted(async () => {
-  const userId = getUserId()
+  const userId = parseInt(localStorage.getItem('userId'))
   if (userId) {
     try {
       const user = await $fetch(`http://localhost:4000/api/users/${userId}`, {
@@ -97,8 +95,8 @@ const props = defineProps({
   width: 25vw;
   max-width: 420px;
   min-width: 180px;
-  background-color: #372f2f;
-  border-right: 10px solid #93877e;
+  background-color: var(--accent-color);
+  border-right: 10px solid var(--secondary-color);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -110,7 +108,7 @@ const props = defineProps({
 }
 .sidebar a {
   text-decoration: none;
-  color: #372f2f;
+  color: var(--accent-color);
   font-family: 'Quicksand', sans-serif;
 }
 
@@ -136,8 +134,8 @@ const props = defineProps({
 
 /* Mantener comportamiento de secciones dentro del scroll */
 .section {
-  border: 3px solid #93877e;
-  background-color: #d9d9d9;
+  border: 3px solid var(--secondary-color);
+  background-color: var(--primary-color);
   margin-bottom: 12px;
   padding: 12px;
   display: flex;
@@ -147,13 +145,13 @@ const props = defineProps({
   min-height: 48px;
   font-family: 'Quicksand', sans-serif;
   box-sizing: border-box;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 .change:hover {
-  background-color: #93877e; 
-  color: #d9d9d9;   
-  cursor: pointer;         
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  cursor: pointer;
 }
 
 /* Avatar */
@@ -170,8 +168,8 @@ const props = defineProps({
   width: 40px;
   height: 40px;
   border-radius: 4px;
-  border: 5px solid #93877e;
-  background-color: #93877e;
+  border: 5px solid var(--secondary-color);
+  background-color: var(--secondary-color);
   cursor: pointer;
   position: fixed;
   top: 0;

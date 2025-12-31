@@ -9,5 +9,17 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/image'
   ],
+  css: ['~/assets/global.css'],
+  test: {
+    environment: "nuxt",
+
+    environmentOptions: {
+      nuxt: {
+        domEnvironment: "happy-dom"
+      }
+    },
+
+    globals: true
+  }
 })
 

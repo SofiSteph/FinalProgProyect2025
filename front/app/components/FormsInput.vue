@@ -27,10 +27,10 @@ const updateValue = (event: Event) => {
 
 <style scoped>
 .bg-inputsBg {
-  background-color: #372f2f;
+  background-color: var(--accent-color);
   width: 700px;
   height: 40px;
-  border: 3px solid #93877e;
+  border: 3px solid var(--secondary-color);
   margin-bottom: 12px;
   padding: 12px;
   display: flex;
@@ -40,7 +40,7 @@ const updateValue = (event: Event) => {
   box-sizing: border-box;
 }
 .text-inputsText {
-  color: #d9d9d9;
+  color: var(--primary-color);
   font-family: 'Quicksand', sans-serif;
   text-decoration: none;
   text-align: center;

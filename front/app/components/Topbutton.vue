@@ -22,18 +22,19 @@ function goBack() {
 <style scoped>
 .btn-top-right {
   font-weight: 700;
-  border-radius: 0.5rem; 
-  background-color: #93877e;
-  color: #d9d9d9 ;
+  border-radius: 0.5rem;
+  background-color: var(--secondary-color);
+  color: var(--primary-color) ;
   padding: 0.5rem 1rem;
   text-decoration: none;
   display: inline-block;
   position: absolute;
-  cursor: pointer;     
-  top: 2rem;   
-  right: 2rem;  
-  width: auto;    
+  cursor: pointer;
+  top: 2rem;
+  right: 2rem;
+  width: auto;
   height: auto;
   font-family: 'Quicksand', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+  border-color: var(--accent-color);
 }
 </style>

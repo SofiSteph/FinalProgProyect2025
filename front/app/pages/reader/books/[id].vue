@@ -1,6 +1,6 @@
 <template>
   <div class="background">
-    <NuxtImg class="book-image" width="200" height="200" :src="imageUrl" alt="libro"/>
+    <NuxtImg class="book-image" width="200" height="200" :src="imageUrl" alt="libro" @error="handleImageError"/>
     <Panel :text="bigText"/>
     <Panel class="minipanel" :text="miniText"/>
     <Topbutton/>
@@ -52,11 +52,15 @@ watch(bookData, async (response) => {
 watch(bookError, (err) => {
   if (err && err.value) messages.value.push('Error al cargar el libro: ' + (err.value.message || err.value))
 })
+
+const handleImageError = () => {
+  imageUrl.value = '/book.png'
+}
 </script>
 
 <style scoped>
 .background {
-  background-color: #d9d9d9;
+  background-color: var(--primary-color);
   position: fixed;
   top: 0;
   left: 0;
@@ -70,9 +74,9 @@ watch(bookError, (err) => {
   bottom: 0;
   height: 3vh;
   width: 50vh;
-  background-color: #372f2f;
-  border: 5px solid #93877e;
-  color: #d9d9d9;
+  background-color: var(--accent-color);
+  border: 5px solid var(--secondary-color);
+  color: var(--primary-color);
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1rem;

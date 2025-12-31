@@ -1,6 +1,7 @@
 <template>
   <User :nav="navItems"/>
   <div class="background">
+    <h1 class="title">... Libros</h1>
     <Table :elements="elements" :optionValues="optionValues"/>
   </div>
 </template>
@@ -44,12 +45,21 @@ watch(data, (books) => {
 
 <style scoped>
 .background {
-  background-color: #d9d9d9;
+  background-color: var(--primary-color);
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: -1;
+}
+.title {
+   position: absolute;
+   top:  10%;
+   left: 75%;
+   font-family: 'Quicksand', sans-serif;
+   color: var(--accent-color);
+   font-size: 2rem;
+   z-index: 1;
 }
 </style>

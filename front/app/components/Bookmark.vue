@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <img src="/public/bookmark.png" class="image" alt="Bookmark" />
+    <img src="/bookmark.png" class="image" alt="Bookmark" />
   </div>
 </template>
 

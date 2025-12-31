@@ -1,7 +1,7 @@
 <template>
   <section class="min-h-screen flex items-center justify-center bg-black/5 p-6 section">
     <div class="avatar-container">
-      <img src="/public/user.png" alt="Avatar" width="150" height="150" style="border-radius:50%; object-fit:cover;">
+      <img src="/user.png" alt="Avatar" width="150" height="150" style="border-radius:50%; object-fit:cover;">
     </div>
 
     <form class="w-full max-w-md bg-white/5 p-6 rounded-md space-y-8 form" @submit.prevent="handleSubmit">
@@ -34,12 +34,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUser } from '~/assets/useUser'
 import { messages } from '~/assets/messages'
 import { watch, onMounted } from 'vue'
 
 const router = useRouter()
-const { setUserId } = useUser()
 
 const form = reactive({
   usuario: '',
@@ -60,30 +58,24 @@ async function handleSubmit() {
   if (!validate()) return
 
   try {
-    // Verificar si el usuario existe
     const user = await $fetch(`http://localhost:4000/api/users/username/${form.usuario}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });
     
-
-    // Verificar contraseña
     if (user.password !== form.contraseña) {
       messages.value.push('Contraseña incorrecta')
       return
     }
 
-    // Set userId after successful login
-    setUserId(user.id);
+    localStorage.setItem('userId', user.id);
 
-    // Obtener rol del usuario
     const roleData = await $fetch(`http://localhost:4000/api/roles/${user.role_id}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });
     const role = roleData.role;
 
-    // Redirección según rol
     switch (role) {
       case 'reader':
         router.push('/reader/books/all')
@@ -132,10 +124,10 @@ watch(form, (newData) => {
    margin-left: 35px;
 }
 .bg-inputsBg {
-  background-color: #372f2f;
+  background-color: var(--accent-color);
   width: 700px;
   height: 40px;
-  border: 3px solid #93877e;
+  border: 3px solid var(--secondary-color);
   margin-bottom: 12px;
   padding: 12px;
   display: flex;
@@ -144,20 +136,20 @@ watch(form, (newData) => {
   min-height: 48px;
   box-sizing: border-box;
 }
-.text-inputsText {color: #d9d9d9; font-family: 'Quicksand', sans-serif; text-decoration: none;  text-align: center;}
-.button { width: 300px; height: 40px; margin-left: 100px; background-color: #372f2f; color: #d9d9d9; cursor: pointer; border: 3px solid #93877e; }
+.text-inputsText {color: var(--primary-color); font-family: 'Quicksand', sans-serif; text-decoration: none;  text-align: center;}
+.button { width: 300px; height: 40px; margin-left: 100px; background-color: var(--accent-color); color: var(--primary-color); cursor: pointer; border: 3px solid var(--secondary-color); }
 .buttons-nav{
    transform: translateX(-100px);
    display:flex; 
 }
 .changecolor{
-   background-color: #d9d9d9;
-   border: 3px solid #372f2f;
-   color: #372f2f;
+   background-color: var(--primary-color);
+   border: 3px solid var(--accent-color);
+   color: var(--accent-color);
 }
 .change:hover {
-   background-color: #d9d9d9;
-   border: 3px solid #93877e;
-   color: #372f2f;      
+   background-color: var(--primary-color);
+   border: 3px solid var(--secondary-color);
+   color: var(--accent-color);
 }
 </style>

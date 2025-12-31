@@ -17,19 +17,22 @@
         </tr>
       </tbody>
     </table>
-    <FilterButtons v-if="route.path === '/reader/books/all'" @filter-author="handleFilterAuthor" @filter-date="handleFilterDate" @filter-keyword="handleFilterKeyword" />
+    <div v-if="route.path === '/reader/books/all'" class="filter-inputs-container">
+      <FilterInput v-model="filterAuthor" placeholder="Filtrar por Autor" />
+      <FilterInput v-model="filterDate" placeholder="Filtrar por Fecha" />
+      <FilterInput v-model="filterKeyword" placeholder="Filtrar por palabra clave" />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { useUser } from '~/assets/useUser'
 import { ref, computed } from 'vue'
+import { messages } from '~/assets/messages'
+import FilterInput from '~/components/FilterInput.vue'
+
 const router = useRouter()
 const route = useRoute()
-const { getUserId } = useUser()
-import { messages } from '~/assets/messages'
-import FilterButtons from '~/components/FilterButtons.vue'
 
 const props = defineProps({
   elements: {
@@ -81,11 +84,11 @@ function handleFilterKeyword(keyword) {
 }
 
 async function handleOptionClick(elem, optValue) {
-    const userId = getUserId()
+    const userId = parseInt(localStorage.getItem('userId'))
     if (!userId) {
         messages.value.push('Usuario no autenticado')
         return
-    } 
+    }
     if (optValue === 'Ver'  && route.path === '/reader/books/all') {
         router.push({ path: `/reader/books/${elem.id}`})
     } else if (optValue === 'Obtener') {
@@ -131,7 +134,7 @@ async function handleOptionClick(elem, optValue) {
         }
     } else if (optValue === 'Cancelar') {
         try {
-            const userId = getUserId()
+            const userId = parseInt(localStorage.getItem('userId'))
             if (!userId) {
                 messages.value.push('Usuario no autenticado')
                 return
@@ -218,31 +221,29 @@ async function handleOptionClick(elem, optValue) {
 </script>
 
 <style scoped>
-/* Estilos para la columna de elementos (grupo Element) */
 .element-cell {
-  background-color: #372f2f;
-  color: #d9d9d9;
+  background-color: var(--accent-color);
+  color: var(--primary-color);
   font-family: 'Quicksand', sans-serif;
   border-radius: 0;
 }
 .element-style {
   width: 720px; 
   height: 40px;
-  padding: 0;           /* para que el inner tenga control del overflow */
+  padding: 0;          
   align-items: center;
   justify-content: left;
 }
 .element-inner {
-  white-space: nowrap;    /* evita que el texto haga wrapping dentro de la celda */
-  overflow-x: auto;         /* scroll horizontal si el texto excede el ancho */
+  white-space: nowrap;    
+  overflow-x: auto;         
   overflow-y: hidden;
   padding: 0 6px;       
 }
 
-/* Estilos para las celdas de opciones (grupo Option) */
 .option-cell {
-  background-color: #372f2f;
-  color: #d9d9d9;
+  background-color: var(--accent-color);
+  color: var(--primary-color);
   font-family: 'Quicksand', sans-serif;
   border-radius: 0;
 }
@@ -253,26 +254,34 @@ async function handleOptionClick(elem, optValue) {
   cursor: pointer;
 }
 .option-cell:hover {
-  background-color: #93877e; /* color de fondo temporal  */
-  color: #d9d9d9;            /* color de fuente temporal  */
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .table-container {
-  overflow: auto;   /* añade scroll tanto vertical como horizontal si es necesario */
-  border: 1px solid rgba(0,0,0,.1);
+  overflow: auto;   
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  box-shadow: 0 2px 8px var(--accent-color);
   max-width: 1035px;
-  height: 580px;
+  height: 76%;
   margin: 0 auto;
   margin-left: 185px;
-  margin-top: 55px;
+  margin-top: 10%;
 }
 
-/* Estilos para la tabla */
 .table {
   justify-content: center;
-  border-spacing: 12px;
-  margin-top: 80px;
+  border-spacing: 10px;
+  margin-top: 10px;
+}
+
+.filter-inputs-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
 }
 </style>

@@ -21,11 +21,11 @@ const formattedText = computed(() => formatText(props.text))
   position: fixed;
   left: 198px;
   bottom: 0;
-  height: 45vh;            
+  height: 45vh;
   width: 151vh;
-  background-color: #372f2f;
-  border: 5px solid #93877e;
-  color: #d9d9d9;
+  background-color: var(--accent-color);
+  border: 5px solid var(--secondary-color);
+  color: var(--primary-color);
   overflow-y: auto;          /* scroll vertical cuando el contenido exceda */
   overflow-x: hidden;        /* desactiva el scroll horizontal */
   padding: 1rem;

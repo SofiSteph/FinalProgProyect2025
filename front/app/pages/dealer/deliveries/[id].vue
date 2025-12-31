@@ -1,5 +1,6 @@
 <template>
   <div class="background">
+    <NuxtImg class="book-image" width="200" height="200" src="/book.png" alt="préstamo"/>
     <Panel :text="bigText"/>
     <Panel class="minipanel" :text="miniText"/>
     <Topbutton/>
@@ -112,7 +113,7 @@ watch(deliveryError, (err) => {
 
 <style scoped>
 .background {
-  background-color: #d9d9d9;
+  background-color: var(--primary-color);
   position: fixed;
   top: 0;
   left: 0;
@@ -126,14 +127,19 @@ watch(deliveryError, (err) => {
   bottom: 0;
   height: 3vh;
   width: 50vh;
-  background-color: #372f2f;
-  border: 5px solid #93877e;
-  color: #d9d9d9;
+  background-color: var(--accent-color);
+  border: 5px solid var(--secondary-color);
+  color: var(--primary-color);
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1rem;
   display: flex;
   transform: translateY(-350px);
   flex-direction: column;
+}
+.book-image {
+  z-index: 80000;
+  margin-left: 43%;
+  margin-top: 1%;
 }
 </style>

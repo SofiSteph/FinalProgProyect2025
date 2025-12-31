@@ -31,7 +31,7 @@ onMounted(() => {
 
 <style scoped>
 .background {
-  background-color: #d9d9d9;
+  background-color: var(--primary-color);
   position: fixed;
   top: 0;
   left: 0;

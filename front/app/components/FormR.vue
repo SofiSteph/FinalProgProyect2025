@@ -61,13 +61,9 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted, watch} from 'vue'
 import { navigateTo } from '#app'
-import { useUser } from '~/assets/useUser'
 import { messages } from '~/assets/messages'
 
-const { setUserId } = useUser()
 const theme = ref("light");
-
-//clave única del localStorage
 const STORAGE_KEY = "localMemory"
 
 const form = reactive({
@@ -154,9 +150,9 @@ async function handleSubmit() {
       },
       body: JSON.stringify(userData)
     });
-    // Set userId after successful registration
-    setUserId(response.data.id);
-      // Redirect based on role
+   
+    localStorage.setItem('userId', response.data.id);
+      
       if (form.rol.role === 'technician') {
         await navigateTo('/technician/loans/all');
         messages.value.push("Bienvenido a la sección de Préstamos Solicitados por los Usuarios. Valídalos (Validar) o no (Invalidar), según convenga. También puedes obtener información de estos (Info)")
@@ -190,10 +186,10 @@ async function handleSubmit() {
   z-index: 9000;
 }
 .bg-inputsBg {
-  background-color: #372f2f;
+  background-color: var(--accent-color);
   width: 700px;
   height: 40px;
-  border: 3px solid #93877e;
+  border: 3px solid var(--secondary-color);
   margin-bottom: 12px;
   padding: 12px;
   display: flex;
@@ -202,20 +198,20 @@ async function handleSubmit() {
   min-height: 48px;
   box-sizing: border-box;
 }
-.text-inputsText {color: #d9d9d9; font-family: 'Quicksand', sans-serif; text-decoration: none;  text-align: center;}
-.button { width: 300px; height: 40px; margin-left: 100px; background-color: #372f2f; color: #d9d9d9; cursor: pointer; border: 3px solid #93877e; }
+.text-inputsText {color: var(--primary-color); font-family: 'Quicksand', sans-serif; text-decoration: none;  text-align: center;}
+.button { width: 300px; height: 40px; margin-left: 100px; background-color: var(--accent-color); color: var(--primary-color); cursor: pointer; border: 3px solid var(--secondary-color); }
 .buttons-nav{
    transform: translateX(-100px);
-   display:flex; 
+   display:flex;
 }
 .changecolor{
-   background-color: #d9d9d9;
-   border: 3px solid #372f2f;
-   color: #372f2f;
+   background-color: var(--primary-color);
+   border: 3px solid var(--accent-color);
+   color: var(--accent-color);
 }
 .change:hover {
-   background-color: #d9d9d9;
-   border: 3px solid #93877e;
-   color: #372f2f;
+   background-color: var(--primary-color);
+   border: 3px solid var(--secondary-color);
+   color: var(--accent-color);
 }
 </style>

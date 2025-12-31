@@ -1,25 +1,24 @@
 <template>
   <User :nav="navItems"/>
   <div class="background">
+    <h1 class="title">... Préstamos</h1>
     <Table :elements="elements" :optionValues="optionValues"/>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getEmptyNav } from '~/assets/getNav'
 import { messages } from '~/assets/messages'
-import { useUser } from '~/assets/useUser'
 import { useFetch } from '#imports'
 
 const optionValues = ['Info', 'Validar', 'Invalidar']
 const navItems = getEmptyNav()
 const elements = ref([])
-const { getUserId } = useUser()
 
-const userId = getUserId()
+const userId = parseInt(localStorage.getItem('userId'))
 
 const { data: loansData, error: loansError, refresh: refreshLoans } = useFetch(
   () => userId ? `http://localhost:4000/api/loans/technician/${userId}` : null,
@@ -53,12 +52,21 @@ watch(loansError, (err) => {
 
 <style scoped>
 .background {
-  background-color: #d9d9d9;
+  background-color: var(--primary-color);
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: -1;
+}
+.title {
+   position: absolute;
+   top:  10%;
+   left: 75%;
+   font-family: 'Quicksand', sans-serif;
+   color: var(--accent-color);
+   font-size: 2rem;
+   z-index: 1;
 }
 </style>

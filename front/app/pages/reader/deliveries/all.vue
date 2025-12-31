@@ -1,6 +1,7 @@
 <template>
   <User :nav="navItems"/>
   <div class="background">
+    <h1 class="title">... Entregas</h1>
     <Table :elements="elements" :optionValues="optionValues"/>
   </div>
 </template>
@@ -9,11 +10,9 @@
 import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
-import { useUser } from '~/assets/useUser'
 import { getDefaultNav } from '~/assets/getNav'
 import { messages } from '~/assets/messages'
 
-const { getUserId } = useUser()
 messages.value.push("Bienvenido a la sección de Entregas. Aquí puedes ver su información de las entregas (Ver) o cancelar su envío (Cancelar)")
 
 const navItems = getDefaultNav()
@@ -21,7 +20,7 @@ const elements = ref([])
 const optionValues = ['Ver', 'Cancelar']
 
 // Obtener userId
-const userId = getUserId()
+const userId = parseInt(localStorage.getItem('userId'))
 
 // useFetch condicionado: si userId es falsy no hace la petición
 const { data: deliveriesData, error: deliveriesError, pending: deliveriesPending, refresh: refreshDeliveries } = useFetch(
@@ -65,12 +64,21 @@ onMounted(() => {
 
 <style scoped>
 .background {
-  background-color: #d9d9d9;
+  background-color: var(--primary-color);
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: -1;
+}
+.title {
+   position: absolute;
+   top:  10%;
+   left: 75%;
+   font-family: 'Quicksand', sans-serif;
+   color: var(--accent-color);
+   font-size: 2rem;
+   z-index: 1;
 }
 </style>
