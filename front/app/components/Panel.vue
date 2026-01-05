@@ -1,6 +1,6 @@
 <template>
   <div class="bottom-panel" aria-label="Panel inferior">
-    <p class="panel-text" v-html="formattedText"></p>
+    <p v-if="text" class="panel-text" v-html="formattedText"></p>
     <slot />
   </div>
 </template>

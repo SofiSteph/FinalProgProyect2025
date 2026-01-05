@@ -7,19 +7,8 @@ export default defineNuxtConfig({
     port: 3000
   },
   modules: [
-    '@nuxt/image'
+    '@nuxt/image',
   ],
-  css: ['~/assets/global.css'],
-  test: {
-    environment: "nuxt",
-
-    environmentOptions: {
-      nuxt: {
-        domEnvironment: "happy-dom"
-      }
-    },
-
-    globals: true
-  }
+  css: ['~/assets/global.css']
 })
 
