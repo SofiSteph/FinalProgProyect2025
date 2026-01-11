@@ -9,10 +9,8 @@ export default defineVitestConfig({
       }
     },
     globals: true,
-    test: {
-      //60 segundos de paciencia
-      testTimeout: 60000,
-      include: ["tests/e2e/**/*.tests.ts"]
-    }
+    //60 segundos de paciencia
+    testTimeout: 60000,
+    include: ["tests/e2e/*.tests.ts", "tests/unit/*.tests.ts"]
   }
 })
