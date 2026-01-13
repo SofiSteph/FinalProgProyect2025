@@ -2,7 +2,7 @@ BACKEND (cd back)
 * Pasos para levantar el servidor exitosamente: 
 1- npm install
 2- Crear .env con los datos correspondientes 
-3- Crear back/public/images
+3- Crear carpeta para almacenar las imágenes: back/public/images
 3- Comando "node app.js"
 
 FRONTEND (cd front)

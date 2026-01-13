@@ -11,7 +11,7 @@ import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getEmptyNav } from '~/assets/getNav'
-import { messages } from '~/assets/messages'
+import { messages, push } from '~/assets/messages'
 import { useFetch } from '#imports'
 
 const optionValues = ['Info', 'Validar', 'Invalidar']
@@ -31,22 +31,22 @@ const { data: loansData, error: loansError, refresh: refreshLoans } = useFetch(
 
 watch(loansData, (loans) => {
   if (!userId) {
-    messages.value.push('Usuario no autenticado')
+    push('Usuario no autenticado')
     return
   }
   if (!loans) return
 
   if (Array.isArray(loans) && loans.length > 0) {
     elements.value = loans.map((loan) => ({ id: loan.id, value: loan.reader.name }))
-    messages.value.push('Se han realizado ' + loans.length + ' préstamos en tu sala')
+    push('Se han realizado ' + loans.length + ' préstamos en tu sala')
   } else {
     elements.value = []
-    messages.value.push('No tienes entregas aún ¿Qué tal si pides algún libro (Obtener)?')
+    push('No tienes entregas aún ¿Qué tal si pides algún libro (Obtener)?')
   }
 })
 
 watch(loansError, (err) => {
-  if (err && err.value) messages.value.push('Error al cargar las entregas: ' + (err.value.message || err.value))
+  if (err && err.value) push('Error al cargar las entregas: ' + (err.value.message || err.value))
 })
 </script>
 

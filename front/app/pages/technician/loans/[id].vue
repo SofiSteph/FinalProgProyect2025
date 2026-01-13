@@ -13,7 +13,7 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Panel from '~/components/Panel.vue'
 import Topbutton from '~/components/Topbutton.vue'
-import { messages } from '~/assets/messages'
+import { messages, push } from '~/assets/messages'
 import { useFetch } from '#imports'
 
 const route = useRoute()
@@ -37,13 +37,13 @@ const { data: bookData, error: bookError } = useFetch(
 
 watch(loanData, (loan) => {
   if (!id) {
-    messages.value.push('ID no proporcionado.')
+    push('ID no proporcionado.')
     return
   }
   if (!loan) return
   // Si loan existe pero no tiene book, mostrar mensaje
   if (!loan.book || !loan.book.id) {
-    messages.value.push('No se encontró información del préstamo o libro asociado.')
+    push('No se encontró información del préstamo o libro asociado.')
   }
 })
 
@@ -74,12 +74,11 @@ watch(bookData, (response) => {
   }
 
   bigText.value = info
-  messages.value.push('Información del libro cargada correctamente')
 })
 
 watch([loanError, bookError], ([lErr, bErr]) => {
   const err = lErr?.value || bErr?.value
-  if (err) messages.value.push('Error al cargar la información del libro: ' + (err.message || err))
+  if (err) push('Error al cargar la información del libro: ' + (err.message || err))
 })
 </script>
 

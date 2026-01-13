@@ -11,9 +11,9 @@ import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getDefaultNav } from '~/assets/getNav'
-import { messages } from '~/assets/messages'
+import { messages, push } from '~/assets/messages'
 
-messages.value.push("Bienvenido a la sección de Entregas. Aquí puedes ver su información de las entregas (Ver) o cancelar su envío (Cancelar)")
+push("Bienvenido a la sección de Entregas. Aquí puedes ver su información de las entregas (Ver) o cancelar su envío (Cancelar)")
 
 const navItems = getDefaultNav()
 const elements = ref([])
@@ -35,7 +35,7 @@ const { data: deliveriesData, error: deliveriesError, pending: deliveriesPending
 // Procesar datos cuando lleguen
 watch(deliveriesData, (deliveries) => {
   if (!userId) {
-    messages.value.push('Usuario no autenticado')
+    push('Usuario no autenticado')
     return
   }
 
@@ -47,14 +47,14 @@ watch(deliveriesData, (deliveries) => {
       value: delivery.status
     }))
   } else {
-    messages.value.push('No tienes entregas aún ¿Qué tal si pides algún libro (Obtener)?')
+    push('No tienes entregas aún ¿Qué tal si pides algún libro (Obtener)?')
     elements.value = []
   }
 })
 
 // Manejo de errores
 watch(deliveriesError, (err) => {
-  if (err && err.value) messages.value.push('Error al cargar las entregas: ' + (err.value.message || err.value))
+  if (err && err.value) push('Error al cargar las entregas: ' + (err.value.message || err.value))
 })
 
 onMounted(() => {

@@ -13,7 +13,7 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Panel from '~/components/Panel.vue'
 import Topbutton from '~/components/Topbutton.vue'
-import { messages } from '~/assets/messages'
+import { messages, push } from '~/assets/messages'
 
 const route = useRoute()
 const bigText = ref('')
@@ -99,15 +99,14 @@ watch(deliveryData, async (response) => {
     }).join(';;')
 
     bigText.value = info + loansInfo
-    messages.value.push('Información de la entrega cargada correctamente')
   } catch (error) {
-    messages.value.push('Error al cargar la información de la entrega: ' + (error.message || error))
+    push('Error al cargar la información de la entrega: ' + (error.message || error))
   }
 })
 
 // Manejo de errores del fetch principal
 watch(deliveryError, (err) => {
-  if (err && err.value) messages.value.push('Error al cargar la entrega: ' + (err.value.message || err.value))
+  if (err && err.value) push('Error al cargar la entrega: ' + (err.value.message || err.value))
 })
 </script>
 

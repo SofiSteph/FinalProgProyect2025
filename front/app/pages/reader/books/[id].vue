@@ -13,7 +13,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Panel from '~/components/Panel.vue'
 import Topbutton from '~/components/Topbutton.vue'
-import { messages } from '~/assets/messages'
+import { messages, push } from '~/assets/messages'
 
 const route = useRoute()
 const bigText = ref('')
@@ -44,13 +44,13 @@ watch(bookData, async (response) => {
     imageUrl.value = `http://localhost:4000/${response.image}`
     imageUrl.value = imageUrl.value.replace('/public/', '/');
   } catch (error) {
-    messages.value.push('Error al cargar la información del libro: ' + error.message)
+    push('Error al cargar la información del libro: ' + error.message)
   }
 })
 
 // Manejo de errores del fetch principal
 watch(bookError, (err) => {
-  if (err && err.value) messages.value.push('Error al cargar el libro: ' + (err.value.message || err.value))
+  if (err && err.value) push('Error al cargar el libro: ' + (err.value.message || err.value))
 })
 
 const handleImageError = () => {

@@ -11,7 +11,7 @@
 <script setup>
 import User from '~/layouts/User.vue'
 import Panel from '~/components/Panel.vue'
-import { messages } from '~/assets/messages'
+import { messages, push } from '~/assets/messages'
 import { getDefaultNav } from '~/assets/getNav'
 
 const navItems = getDefaultNav()
@@ -25,7 +25,7 @@ const imageSources = [
 ]
 
 onMounted(() => {
-  messages.value.push("Bienvenido a esta nueva sección. Aquí puedes ver la información de la Biblioteca")
+  push("Bienvenido a esta nueva sección. Aquí puedes ver la información de la Biblioteca")
 })
 </script>
 
