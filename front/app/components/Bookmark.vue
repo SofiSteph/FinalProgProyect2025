@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <img src="/bookmark.png" class="image" alt="Bookmark" />
+    <img src="/bookmark.png" class="image show" alt="Bookmark" />
   </div>
 </template>
 
@@ -22,9 +22,13 @@
   height: auto;
   max-width: calc(100vw - 1rem);
   max-height: calc(100vh - 1rem);
-  pointer-events: auto; /* si necesitas que la imagen sea clickeable */
+  pointer-events: auto;
   z-index: 1000;
 }
 
-
+@media (max-width: 770px) {
+  .show{
+    display: none;
+  }
+}
 </style>

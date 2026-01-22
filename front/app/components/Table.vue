@@ -2,7 +2,7 @@
   <div class="table-container">
     <table class="table">
       <tbody>
-        <tr v-for="(elem, rIdx) in displayedElements" :key="elem.id" class="text-center">
+        <tr v-for="(elem, rIdx) in displayedElements" :key="elem.id">
           <!-- Columna de elemento (mostrando value) -->
           <td class="element-cell element-style px-4 py-6" style="text-align: center;">
             <div class="element-inner" :title="`Contenido: ${elem.value}`"> {{ elem.value }} </div>
@@ -27,12 +27,13 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { messages } from '~/assets/messages'
 import FilterInput from '~/components/FilterInput.vue'
 
 const router = useRouter()
 const route = useRoute()
+const userId = ref(0)
 
 const props = defineProps({
   elements: {
@@ -43,6 +44,15 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+})
+
+onMounted(async () => {
+  if (!process.client) return
+     userId.value = parseInt(localStorage.getItem('userId'))
+  if (!userId) {
+     messages.value.push('Usuario no autenticado')
+     return
+  }
 })
 
 const filterKeyword = ref('')
@@ -84,11 +94,6 @@ function handleFilterKeyword(keyword) {
 }
 
 async function handleOptionClick(elem, optValue) {
-    const userId = parseInt(localStorage.getItem('userId'))
-    if (!userId) {
-        messages.value.push('Usuario no autenticado')
-        return
-    }
     if (optValue === 'Ver'  && route.path === '/reader/books/all') {
         router.push({ path: `/reader/books/${elem.id}`})
     } else if (optValue === 'Obtener') {
@@ -121,7 +126,7 @@ async function handleOptionClick(elem, optValue) {
                 body: JSON.stringify({
                     loan_start_date: loanStartDate,
                     loan_end_date: loanEndDate,
-                    reader_user_id: userId,
+                    reader_user_id: userId.value,
                     room_technician_user_id: roomTechnicianUserId,
                     delivery_id: null,
                     validated: false
@@ -204,7 +209,7 @@ async function handleOptionClick(elem, optValue) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     status: newStatus,
-                    dealer_user_id: userId
+                    dealer_user_id: userId.value
                 })
             });
 
@@ -228,17 +233,15 @@ async function handleOptionClick(elem, optValue) {
   border-radius: 0;
 }
 .element-style {
-  width: 720px; 
-  height: 40px;
-  padding: 0;          
+  padding: 0;
   align-items: center;
   justify-content: left;
 }
 .element-inner {
-  white-space: nowrap;    
-  overflow-x: auto;         
-  overflow-y: hidden;
-  padding: 0 6px;       
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: auto;
+  padding: 0 6px;
 }
 
 .option-cell {
@@ -248,7 +251,6 @@ async function handleOptionClick(elem, optValue) {
   border-radius: 0;
 }
 .option-style {
-  width: 80px;
   height: 40px;
   text-align: center;
   cursor: pointer;
@@ -259,20 +261,20 @@ async function handleOptionClick(elem, optValue) {
 }
 
 .table-container {
-  overflow: auto;   
+  overflow-x: auto;
+  overflow-y: auto;
   border-radius: 6px;
-  box-shadow: 0 2px 8px var(--accent-color);
-  max-width: 1035px;
+  width: 100%;
   height: 76%;
-  margin: 0 auto;
-  margin-left: 185px;
-  margin-top: 10%;
+  margin: 10% 15% 20%;
+  max-width: 74vw;
 }
 
 .table {
   justify-content: center;
   border-spacing: 10px;
   margin-top: 10px;
+  min-width: 100%;
 }
 
 .filter-inputs-container {
@@ -283,5 +285,64 @@ async function handleOptionClick(elem, optValue) {
   flex-direction: column;
   gap: 10px;
   z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: calc(100vw - 20px);
+    height: 70%;
+  }
+
+  .element-style {
+    width: 60vw;
+    min-width: 200px;
+  }
+
+  .option-style {
+    width: 60px;
+    font-size: 0.9em;
+  }
+
+  .filter-inputs-container {
+    bottom: 10px;
+    right: 10px;
+    flex-direction: row;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container {
+    margin-top: 15%;
+    height: 65%;
+    padding: 0 5px;
+    overflow-y: auto;
+  }
+
+  .element-style {
+    width: 50vw;
+    min-width: 150px;
+    font-size: 0.9em;
+  }
+
+  .option-style {
+    width: 50px;
+    font-size: 0.8em;
+  }
+
+  .table {
+    border-spacing: 5px;
+  }
+
+  .filter-inputs-container {
+    bottom: 5px;
+    right: 5px;
+    left: 5px;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 5px;
+  }
 }
 </style>

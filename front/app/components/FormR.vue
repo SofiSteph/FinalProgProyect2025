@@ -1,60 +1,62 @@
 <template>
-  <section class="min-h-screen flex items-center justify-center bg-black/5 p-6 section">
+  <section class="section">
     <div class="avatar-container">
       <img src="/user.png" alt="Avatar" width="150" height="150" style="border-radius:50%; object-fit:cover;">
     </div>
-
-    <form class="w-full max-w-md bg-white/5 p-6 rounded-md space-y-8 form" @submit.prevent="handleSubmit">
+    
+    <div class="form">
+    <form @submit.prevent="handleSubmit">
       <!-- Nombre -->
-      <div class="mb-6">
-        <FormsInput id="nombre" v-model="form.nombre" type="text" placeholder="Nombre" />
+      <div class="mb-6 buttons">
+         <FormsInput id="nombre" v-model="form.nombre" type="text" placeholder="Nombre" />
       </div>
 
       <!-- Email -->
-      <div class="mb-6">
-        <FormsInput id="email" v-model="form.email" type="email" placeholder="Email" />
+      <div class="mb-6 buttons">
+         <FormsInput id="email" v-model="form.email" type="email" placeholder="Email" />
       </div>
 
       <!-- Nombre de usuario -->
-      <div class="mb-6">
+      <div class="mb-6 buttons">
         <FormsInput id="usuario" v-model="form.usuario" type="text" placeholder="Usuario" />
       </div>
 
       <!-- Contraseña -->
-      <div class="mb-6">
+      <div class="mb-6 buttons">
         <FormsInput id="contraseña" v-model="form.contraseña" type="text" placeholder="Contraseña" />
       </div>
 
       <!-- Rol -->
-      <div class="mb-6">
-        <select id="rol" v-model="form.rol" class="bg-inputsBg text-inputsText">
-          <option value="" disabled>Rol</option>
-          <option v-for="role in roles" :key="role.id" :value="role">{{ role.role }}</option>
-        </select>
+      <div class="mb-6 buttons">
+        <FormsList
+          id="rol"
+          v-model="form.rol"
+          :options="roles"
+          textKey="role"
+          placeholder="Rol"
+        />
       </div>
 
       <!-- Sala (En caso de que sea técnico de sala) -->
-      <div v-if="form.rol.role === 'technician'" class="mb-6">
-        <select id="bookroom" v-model="form.bookroom" class="bg-inputsBg text-inputsText">
-          <option value="" disabled>Sala a la que pertenece</option>
-          <option v-for="sala in salas" :key="sala.id" :value="sala.id">{{ sala.room_name }}</option>
-        </select>
+      <div v-if="form.rol.role === 'technician'">
+        <FormsList
+          id="bookroom"
+          v-model="form.bookroom"
+          :options="salas"
+          valueKey="id"
+          textKey="room_name"
+          placeholder="Sala a la que pertenece"
+        />
       </div>
 
-      <div class="buttons-nav">
-
+      <div class="buttons buttons-row">
         <!-- Iniciar sesión -->
-        <NuxtLink to="/login" class="changecolor bg-inputsBg text-inputsText button" >
-          Iniciar sesión
-        </NuxtLink>
-        
+        <FormsButtonLink to="/login" text="Iniciar sesión" />
         <!-- Aceptar -->
-        <button type="submit" class="change bg-inputsBg text-inputsText button">
-          Aceptar
-        </button>
-
+        <FormsButtonSubmit />
       </div>
     </form>
+  </div>
   </section>
 </template>
 
@@ -62,6 +64,8 @@
 import { reactive, ref, onMounted, watch} from 'vue'
 import { navigateTo } from '#app'
 import { messages } from '~/assets/messages'
+import FormsButtonSubmit from './FormsButtonSubmit.vue'
+import FormsList from './FormsList.vue'
 
 const theme = ref("light");
 const STORAGE_KEY = "localMemory"
@@ -99,14 +103,18 @@ onMounted(async () => {
     messages.value.push('Error al obtener los roles: ' + error)
   }
 
-  const savedData = localStorage.getItem(STORAGE_KEY)
-  if(savedData){
-    Object.assign(form, JSON.parse(savedData));
+  if (process.client) {
+    const savedData = localStorage.getItem(STORAGE_KEY)
+    if(savedData){
+      Object.assign(form, JSON.parse(savedData));
+    }
   }
 });
 
 watch(form, (newData) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
+  if (process.client) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
+  }
 });
 
 function validate() {
@@ -155,13 +163,10 @@ async function handleSubmit() {
       
       if (form.rol.role === 'technician') {
         await navigateTo('/technician/loans/all');
-        messages.value.push("Bienvenido a la sección de Préstamos Solicitados por los Usuarios. Valídalos (Validar) o no (Invalidar), según convenga. También puedes obtener información de estos (Info)")
       } else if (form.rol.role === 'reader') {
         await navigateTo('/reader/books/all');
-        messages.value.push("Bienvenido a la sala de libros. Aquí puedes ver su información (Ver) y obtenerlos por medio de préstamos (Obtener) en caso de que lo desees")
       } else if (form.rol.role === 'dealer') {
         await navigateTo('/dealer/deliveries/all');
-        messages.value.push("Bienvenido a la sala de Entregas. Aquí puedes cambiar sus estados")
       }
   } catch (error) {
     messages.value.push('Error al crear el usuario: ' + error);
@@ -171,47 +176,78 @@ async function handleSubmit() {
 
 <style scoped>
 .avatar-container {
-  margin-left: 100px;
-  margin-top: 150px;
-  width: 60px;
+  flex: 0 0 20%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.section {
+  display: flex;
+  margin-top: 9%;
+  margin-left: 10%;
+  height: 80%;
+  width: 70%;
+  align-items: flex-start;
 }
 .form {
-  margin-left: 300px;
-  transform: translateY(-160px);
-}
-.section{
-   margin-left: 35px;
-}
-.view{
-  z-index: 9000;
-}
-.bg-inputsBg {
-  background-color: var(--accent-color);
-  width: 700px;
-  height: 40px;
-  border: 3px solid var(--secondary-color);
+  flex: 1;
   margin-bottom: 12px;
-  padding: 12px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  box-sizing: border-box;
+  flex-direction: column;
 }
-.text-inputsText {color: var(--primary-color); font-family: 'Quicksand', sans-serif; text-decoration: none;  text-align: center;}
-.button { width: 300px; height: 40px; margin-left: 100px; background-color: var(--accent-color); color: var(--primary-color); cursor: pointer; border: 3px solid var(--secondary-color); }
-.buttons-nav{
-   transform: translateX(-100px);
-   display:flex;
+.buttons {
+  display: flex;
+  width: 100%;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
-.changecolor{
-   background-color: var(--primary-color);
-   border: 3px solid var(--accent-color);
-   color: var(--accent-color);
+.buttons-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-between;
 }
-.change:hover {
-   background-color: var(--primary-color);
-   border: 3px solid var(--secondary-color);
-   color: var(--accent-color);
+
+@media (max-width: 768px) {
+  .section {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
+    margin-left: 5%;
+    width: 90%;
+    height: auto;
+  }
+  .avatar-container {
+    flex: none;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+  .form {
+    width: 100%;
+    margin-left: 0;
+  }
+  .buttons-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    margin-top: 2%;
+    margin-left: 2%;
+    width: 96%;
+  }
+  .avatar-container {
+    height: 100px;
+  }
+  .avatar-container img {
+    width: 100px;
+    height: 100px;
+  }
+  .buttons-row {
+    gap: 20px;
+  }
 }
 </style>

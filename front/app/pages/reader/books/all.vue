@@ -7,12 +7,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getDefaultNav } from '~/assets/getNav'
-import { messages } from '~/assets/messages'
+import { push } from '~/assets/messages'
 import { useFetch } from '#imports' 
+
+useSeoMeta({
+  title: 'Libros',
+  description: 'Vista de todos los libros existentes en la Biblioteca'
+})
 
 const navItems = getDefaultNav()
 const elements = ref([])
@@ -21,6 +26,7 @@ const optionValues = ['Ver', 'Obtener']
 const { data, error, refresh, pending } = useFetch('http://localhost:4000/api/books', {
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
+  server: false
 })
 
 watch(data, (books) => {
@@ -40,6 +46,10 @@ watch(data, (books) => {
   } else {
     elements.value = []
   }
+})
+
+onMounted(async () => {
+   push("Bienvenido a la sala de libros. Aquí puedes ver su información (Ver) y obtenerlos por medio de préstamos (Obtener) en caso de que lo desees")
 })
 </script>
 
@@ -61,5 +71,10 @@ watch(data, (books) => {
    color: var(--accent-color);
    font-size: 2rem;
    z-index: 1;
+}
+@media (max-width: 1000px) {
+.title {
+    display: none;
+}
 }
 </style>

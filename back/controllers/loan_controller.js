@@ -55,7 +55,14 @@ const getAllLoans = async () => {
 // Obtener un Loan por ID
 const getLoanById = async (id) => {
   try {
-    const loan = await Loan.findByPk(id, {
+    
+    console.log("id del loan:" + id)
+    const parsedId = parseInt(id, 10);
+    if (isNaN(parsedId) || parsedId <= 0) {
+      throw new Error('ID de Loan inválido');
+    }
+
+    const loan = await Loan.findByPk(parsedId, {
       include: [
         { model: User, as: 'reader' },      // lector
         { model: User, as: 'technician' },  // técnico

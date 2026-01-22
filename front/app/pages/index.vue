@@ -10,6 +10,24 @@
 import FormR from '~/components/FormR.vue'
 import Header from '~/components/Header.vue';
 import Bookmark from '~/components/Bookmark.vue';
+
+useSeoMeta({
+  title: 'Registro',
+  description: 'Vista que utilizará el usuario para registrarse en el sistema de biblioteca. Regístrate fácilmente y accede a nuestros servicios.',
+  keywords: 'registro, biblioteca, libros, préstamos, usuario',
+  author: 'Biblioteca Team',
+  robots: 'index, follow',
+  canonicalUrl: 'http://localhost:3000/',
+  ogTitle: 'Registro',
+  ogDescription: 'Regístrate en el sistema de biblioteca para acceder a libros y préstamos.',
+  ogImage: '/book.png',
+  ogUrl: 'http://localhost:3000/',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'Registro',
+  twitterDescription: 'Regístrate en el sistema de biblioteca para acceder a libros y préstamos.',
+  twitterImage: '/book.png'
+})
 </script>
 
 <style scoped>

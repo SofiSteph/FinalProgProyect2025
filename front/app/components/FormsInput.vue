@@ -28,16 +28,10 @@ const updateValue = (event: Event) => {
 <style scoped>
 .bg-inputsBg {
   background-color: var(--accent-color);
-  width: 700px;
-  height: 40px;
   border: 3px solid var(--secondary-color);
-  margin-bottom: 12px;
-  padding: 12px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 48px;
-  box-sizing: border-box;
+  width: 100%;
 }
 .text-inputsText {
   color: var(--primary-color);

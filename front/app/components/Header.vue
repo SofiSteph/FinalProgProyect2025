@@ -22,8 +22,8 @@ import { messages } from '~/assets/messages'
   left: 0;
   width: 100%;            /* ocupa todo el ancho de la pantalla */
   height: 50px;
-  background-color: var(--secondary-color);
-  z-index: 2000;           /* por si hay contenido debajo */
+  background-color: var(--secondary-color);  
+  z-index: 2000;
 }
 
 </style>

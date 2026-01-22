@@ -15,6 +15,11 @@ import Panel from '~/components/Panel.vue'
 import Topbutton from '~/components/Topbutton.vue'
 import { messages, push } from '~/assets/messages'
 
+useSeoMeta({
+  title: 'Libro seleccionado',
+  description: 'Información detallada del libro seleccionado por el usuario lector'
+})
+
 const route = useRoute()
 const bigText = ref('')
 const miniText = ref('')
@@ -26,7 +31,7 @@ const { data: bookData, error: bookError} = useFetch(
   {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
-    // server: false
+    server: false
   }
 )
 

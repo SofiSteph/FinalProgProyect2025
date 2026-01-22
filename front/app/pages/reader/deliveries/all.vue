@@ -11,30 +11,33 @@ import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getDefaultNav } from '~/assets/getNav'
-import { messages, push } from '~/assets/messages'
+import { push } from '~/assets/messages'
+
+useSeoMeta({
+  title: 'Entregas',
+  description: 'Vista de todas las entregas realizadas por el usuario lector'
+})
 
 push("Bienvenido a la sección de Entregas. Aquí puedes ver su información de las entregas (Ver) o cancelar su envío (Cancelar)")
 
 const navItems = getDefaultNav()
 const elements = ref([])
 const optionValues = ['Ver', 'Cancelar']
+const userId = ref(0)
 
-// Obtener userId
-const userId = parseInt(localStorage.getItem('userId'))
 
-// useFetch condicionado: si userId es falsy no hace la petición
 const { data: deliveriesData, error: deliveriesError, pending: deliveriesPending, refresh: refreshDeliveries } = useFetch(
-  () => userId ? `http://localhost:4000/api/deliveries/user/${userId}` : null,
+  () => userId.value ? `http://localhost:4000/api/deliveries/user/${userId.value}` : null,
   {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
-    // server: false // descomentar si quieres solo cliente
+    server: false 
   }
 )
 
 // Procesar datos cuando lleguen
 watch(deliveriesData, (deliveries) => {
-  if (!userId) {
+  if (!userId.value) {
     push('Usuario no autenticado')
     return
   }
@@ -57,8 +60,13 @@ watch(deliveriesError, (err) => {
   if (err && err.value) push('Error al cargar las entregas: ' + (err.value.message || err.value))
 })
 
-onMounted(() => {
-  if (userId) refreshDeliveries()
+onMounted(async () => {
+  if (!process.client) return
+     userId.value = parseInt(localStorage.getItem('userId'))
+  if (!userId) {
+     push('Usuario no autenticado')
+     return
+  }
 })
 </script>
 

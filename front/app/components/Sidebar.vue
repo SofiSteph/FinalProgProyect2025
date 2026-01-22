@@ -61,6 +61,7 @@ function toggle() {
 }
 
 onMounted(async () => {
+  if (!process.client) return
   const userId = parseInt(localStorage.getItem('userId'))
   if (userId) {
     try {
@@ -91,10 +92,9 @@ const props = defineProps({
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 25vw;
-  max-width: 420px;
-  min-width: 180px;
+  height: 100%;
+  width: 300px;
+  min-width: 200px;
   background-color: var(--accent-color);
   border-right: 10px solid var(--secondary-color);
   display: flex;
@@ -106,25 +106,17 @@ const props = defineProps({
   transition: width 0.25s ease;
   overflow: hidden;
 }
+
 .sidebar a {
   text-decoration: none;
   color: var(--accent-color);
   font-family: 'Quicksand', sans-serif;
 }
 
-/* Ancho cuando está contraído (parcial) */
 .sidebar-collapsed {
-  width: 4rem; /* contracción mínima visible */
+  width: 4rem;
 }
 
-/* Contracción extrema (minimizado casi oculto) */
-.collapsed {
-  width: 0.0px;
-  padding: 0;
-  overflow: hidden;
-}
-
-/* Área desplazable interna */
 .scrollable-area {
   overflow: auto;
   flex: 1 1 auto;
@@ -132,17 +124,13 @@ const props = defineProps({
   min-height: 0;
 }
 
-/* Mantener comportamiento de secciones dentro del scroll */
 .section {
   border: 3px solid var(--secondary-color);
   background-color: var(--primary-color);
   margin-bottom: 12px;
   padding: 12px;
-  display: flex;
-  align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 48px;
   font-family: 'Quicksand', sans-serif;
   box-sizing: border-box;
   text-decoration: none;
@@ -154,33 +142,12 @@ const props = defineProps({
   cursor: pointer;
 }
 
-/* Avatar */
 .avatar-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 12px 0;
   cursor: pointer;
-}
-
-/* Botón de toggle (expand/collapse) */
-.toggle {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  border: 5px solid var(--secondary-color);
-  background-color: var(--secondary-color);
-  cursor: pointer;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.sidebar-extreme-collapsed .avatar-container,
-.sidebar-extreme-collapsed .scrollable-area,
-.sidebar-extreme-collapsed .section,
-.sidebar-extreme-collapsed .toggle {
-  display: none;
 }
 
 .user-info-section {

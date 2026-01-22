@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <NuxtImg class="book-image" width="200" height="200" src="/book.png" alt="préstamo"/>
-    <Panel :text="bigText"/>
+    <Panel :text="bigText" />
     <Panel class="minipanel" :text="miniText"/>
     <Topbutton/>
   </div>
@@ -14,7 +14,7 @@ import { useRoute } from 'vue-router'
 import Panel from '~/components/Panel.vue'
 import Topbutton from '~/components/Topbutton.vue'
 import { messages, push } from '~/assets/messages'
-import { useFetch } from '#imports'
+import { useFetch, useSeoMeta } from '#imports'
 
 const route = useRoute()
 const bigText = ref('')
@@ -22,9 +22,16 @@ const miniText = ref('')
 
 const id = route.params.id
 
+useSeoMeta({
+  title: 'Préstamo seleccionado',
+  description: 'Vista detallada del préstamo seleccinado por el usuario técnico de sala, incluyendo información del libro y lector.'
+})
+
 const { data: loanData, error: loanError } = useFetch(
   () => id ? `http://localhost:4000/api/loans/${id}` : null,
-  { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+  { method: 'GET', 
+  headers: { 'Content-Type': 'application/json' },
+  server: false }
 )
 
 const { data: bookData, error: bookError } = useFetch(
@@ -32,7 +39,7 @@ const { data: bookData, error: bookError } = useFetch(
     loanData && loanData.value && loanData.value.book
       ? `http://localhost:4000/api/books/${loanData.value.book.id}`
       : null,
-  { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+  { method: 'GET', headers: { 'Content-Type': 'application/json' }, server: false }
 )
 
 watch(loanData, (loan) => {

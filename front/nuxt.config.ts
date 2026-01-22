@@ -8,7 +8,13 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxt/image',
+    '@nuxtjs/seo',
   ],
-  css: ['~/assets/global.css']
+  site: {
+    url: 'http://localhost:3000',
+    name: 'Biblioteca',
+    description: 'A Nuxt.js project for the final programming project 2025',
+  },
+  css: ['~/assets/global.css'],
 })
 

@@ -11,14 +11,21 @@ import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getEmptyNav } from '~/assets/getNav'
+import { push } from '~/assets/messages'
+
+useSeoMeta({
+  title: 'Entregas',
+  description: 'Vista de todas las entregas de libros que atenderá el usuario repartidor',
+})
 const navItems = getEmptyNav()
 
 const elements = ref([])
 const optionValues = ['Cambiar', 'Info']
 
-const { data: deliveriesData, error: deliveriesError, pending: deliveriesPending, refresh: refreshDeliveries } = useFetch('http://localhost:4000/api/deliveries', {
+const { data: deliveriesData, error: deliveriesError, pending, refresh } = useFetch('http://localhost:4000/api/deliveries', {
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
+  server: false
 })
 
 watch(deliveriesData, (deliveries) => {
@@ -37,8 +44,8 @@ watch(deliveriesError, (err) => {
   if (err) console.error('Error al cargar las entregas:', err)
 })
 
-onMounted(() => {
-  refreshDeliveries()
+onMounted(async () => {
+  push("Bienvenido a la sala de Entregas. Aquí puedes cambiar sus estados")
 })
 </script>
 
@@ -60,5 +67,11 @@ onMounted(() => {
    color: var(--accent-color);
    font-size: 2rem;
    z-index: 1;
+}
+
+@media (max-width: 1000px) {
+.title {
+    display: none;
+}
 }
 </style>

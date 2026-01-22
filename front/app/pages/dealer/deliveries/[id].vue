@@ -15,6 +15,11 @@ import Panel from '~/components/Panel.vue'
 import Topbutton from '~/components/Topbutton.vue'
 import { messages, push } from '~/assets/messages'
 
+useSeoMeta({
+  title: 'Entrega seleccionada',
+  description: 'Información detallada de la entrega seleccionada por el usuario repartidor, incluyendo información del lector y préstamos asociados en el sistema de gestión de biblioteca.'
+})
+
 const route = useRoute()
 const bigText = ref('')
 const miniText = ref('')
@@ -26,11 +31,10 @@ const { data: deliveryData, error: deliveryError, pending: deliveryPending } = u
   {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
-    // server: false
+    server: false
   }
 )
 
-// Obtener nombre de libro usando useFetch
 const getBookName = async (bookId) => {
   if (!bookId) return ''
   try {
@@ -49,7 +53,6 @@ const getBookName = async (bookId) => {
   }
 }
 
-// Obtener lector usando useFetch
 const getReaderById = async (readerId) => {
   if (!readerId) return null
   try {

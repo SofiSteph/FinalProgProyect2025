@@ -7,25 +7,29 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch} from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
 import { getEmptyNav } from '~/assets/getNav'
-import { messages, push } from '~/assets/messages'
-import { useFetch } from '#imports'
+import { push } from '~/assets/messages'
+import { useFetch, useSeoMeta } from '#imports'
 
 const optionValues = ['Info', 'Validar', 'Invalidar']
 const navItems = getEmptyNav()
 const elements = ref([])
+const userId = ref(null)
 
-const userId = parseInt(localStorage.getItem('userId'))
+useSeoMeta({
+  title: 'Préstamos',
+  description: 'Vista de todos los préstamos a gestionar por el usuario técnico de sala, con opciones para validar o invalidar.'
+})
 
 const { data: loansData, error: loansError, refresh: refreshLoans } = useFetch(
-  () => userId ? `http://localhost:4000/api/loans/technician/${userId}` : null,
+  () => userId.value ? `http://localhost:4000/api/loans/technician/${userId.value}` : null,
   {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
-    // server: false // descomentar si solo quieres petición en cliente
+    server: false 
   }
 )
 
@@ -41,12 +45,21 @@ watch(loansData, (loans) => {
     push('Se han realizado ' + loans.length + ' préstamos en tu sala')
   } else {
     elements.value = []
-    push('No tienes entregas aún ¿Qué tal si pides algún libro (Obtener)?')
   }
 })
 
 watch(loansError, (err) => {
   if (err && err.value) push('Error al cargar las entregas: ' + (err.value.message || err.value))
+})
+
+onMounted(async () => {
+  if (!process.client) return
+     userId.value = parseInt(localStorage.getItem('userId'))
+     push("Bienvenido a la sección de Préstamos Solicitados por los Usuarios. Valídalos (Validar) o no (Invalidar), según convenga. También puedes obtener información de estos (Info)")
+  if (!userId) {
+     push('Usuario no autenticado')
+     return
+  }
 })
 </script>
 
@@ -68,5 +81,11 @@ watch(loansError, (err) => {
    color: var(--accent-color);
    font-size: 2rem;
    z-index: 1;
+}
+
+@media (max-width: 1000px) {
+.title {
+    display: none;
+}
 }
 </style>
