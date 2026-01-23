@@ -22,6 +22,10 @@ module.exports = {
         allowNull: false,
         defaultValue: 0
       },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       book_room_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -30,9 +34,6 @@ module.exports = {
           key: 'id'
         },
         onDelete: 'CASCADE'
-      },
-      deletedAt: {
-        type: Sequelize.DATE
       }
     });
   },

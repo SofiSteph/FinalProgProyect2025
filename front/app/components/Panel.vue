@@ -56,23 +56,16 @@ const formattedText = computed(() => formatText(props.text))
     height: 40vh;
     padding: 0.75rem;
   }
-  .panel-text {
-    font-size: 1rem;
-  }
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
   .bottom-panel {
-    left: 0;
+    left: 200px;
     width: 100vw;
     height: 35vh;
     padding: 0.5rem;
     border-width: 3px;
-  }
-  .panel-text {
-    font-size: 0.875rem;
-    line-height: 1.4;
   }
 }
 
@@ -81,10 +74,6 @@ const formattedText = computed(() => formatText(props.text))
   .bottom-panel {
     height: 30vh;
     padding: 0.25rem;
-  }
-  .panel-text {
-    font-size: 0.75rem;
-    margin-bottom: 0.5rem;
   }
 }
 </style>

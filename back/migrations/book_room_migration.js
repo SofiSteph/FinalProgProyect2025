@@ -12,9 +12,6 @@ module.exports = {
       room_name: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      deletedAt: {
-        type: Sequelize.DATE
       }
     });
   },
