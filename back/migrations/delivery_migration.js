@@ -17,12 +17,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'user',
+          model: 'users',
           key: 'id'
-        }
-      },
-      deletedAt: {
-        type: Sequelize.DATE
+        },
+        onDelete: 'CASCADE'
       }
     });
   },

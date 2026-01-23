@@ -3,8 +3,9 @@ BACKEND (cd back)
 1- npm install
 2- Crear .env con los datos correspondientes 
 3- Crear carpeta para almacenar las imágenes: back/public/images
-4- Comando "node app.js" para la inicialización
-4- Comando "npx sequelize-cli db:seed:all"para añadir los datos a la base de datos
+4- Comando "node app.js" para la inicialización y creación de las tablas en la BD "biblioteca"
+5- Comando "npx sequelize-cli db:seed:all"para añadir los datos a la base de datos
+6- Comando "npx sequelize-cli db:migrate" para realizar las respectivas migraciones
 
 FRONTEND (cd front)
 * Pasos para levantar el servidor exitosamente:
