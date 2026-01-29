@@ -18,8 +18,8 @@ describe('FormL test', () => {
     await page.goto('http://localhost:3000/login')
 
     // Llenar los inputs
-    await page.fill('#usuario', 'testuser')
-    await page.fill('#contraseña', 'testpass')
+    await page.fill('#usuario', 'userReader')
+    await page.fill('#contraseña', 't')
 
     // Verificar botón Registrarse
     await page.click('text=Registrarse')

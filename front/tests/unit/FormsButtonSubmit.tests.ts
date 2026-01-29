@@ -9,7 +9,7 @@ describe('FormsButtonSubmit', () => {
     const button = wrapper.find('button')
     expect(button.exists()).toBe(true)
     expect(button.attributes('type')).toBe('submit')
-    expect(button.text()).toBe(' Aceptar ')
+    expect(button.text()).toBe('Aceptar')
     expect(button.classes()).toContain('change')
     expect(button.classes()).toContain('bg-inputsBg')
     expect(button.classes()).toContain('text-inputsText')

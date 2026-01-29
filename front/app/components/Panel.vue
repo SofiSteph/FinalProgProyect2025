@@ -30,9 +30,8 @@ const formattedText = computed(() => formatText(props.text))
   display: flex;
   transform: translateY(-10px);
   flex-direction: column;
-  /* Default for large screens */
-  left: 300px;
-  width: calc(100vw - 300px);
+  left: 100px;
+  right: 100px;
 }
 
 .bottom-panel .content {
@@ -46,34 +45,5 @@ const formattedText = computed(() => formatText(props.text))
   font-size: 1.125rem;
   line-height: 1.6;
   font-family: 'Quicksand', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
-}
-
-/* Tablet styles */
-@media (max-width: 1024px) {
-  .bottom-panel {
-    left: 200px;
-    width: calc(100vw - 200px);
-    height: 40vh;
-    padding: 0.75rem;
-  }
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .bottom-panel {
-    left: 200px;
-    width: 100vw;
-    height: 35vh;
-    padding: 0.5rem;
-    border-width: 3px;
-  }
-}
-
-/* Small mobile styles */
-@media (max-width: 480px) {
-  .bottom-panel {
-    height: 30vh;
-    padding: 0.25rem;
-  }
 }
 </style>
