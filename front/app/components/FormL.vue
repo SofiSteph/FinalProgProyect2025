@@ -29,73 +29,66 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { messages } from '~/assets/messages'
 import { watch, onMounted } from 'vue'
+import { definePageMeta } from '#imports'
 import FormsButtonSubmit from './FormsButtonSubmit.vue'
 
-const router = useRouter()
+const { signIn, data } = useAuth()
 
 const form = reactive({
   usuario: '',
   contraseña: ''
 })
 
+const url = ref("")
+
 //clave única del localStorage
 const STORAGE_KEY = "localMemory"
 
 function validate() {
   let ok = true
-  if (!form.usuario) {  messages.value.push('Su usuario es requerido') ; ok = false } 
-  if (!form.contraseña) {   messages.value.push('Su contraseña es incorrecta') ; ok = false } 
+  if (!form.usuario) {  messages.value.push('Su usuario es requerido') ; ok = false }
+  if (!form.contraseña) {   messages.value.push('Su contraseña es incorrecta') ; ok = false }
   return ok
 }
+
 
 async function handleSubmit() {
   if (!validate()) return
 
   try {
-    const user = await $fetch(`http://localhost:4000/api/users/username/${form.usuario}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const user = await $fetch(`${useRuntimeConfig().public.backend_url}/api/users/username/${form.usuario}`) as any;
+    const role = user.role.role;
+
+    if (role === 'reader') {
+      url.value = '/reader/books/all';
+    } else if (role === 'technician') {
+      url.value = '/technician/loans/all';
+    } else if (role === 'dealer') {
+      url.value = '/dealer/deliveries/all';
+    }
+
+    await signIn(
+    {
+      username: form.usuario,
+      password: form.contraseña
+    },
+    {
+      callbackUrl: url.value
+    }
+  );
     
-    if (user.password !== form.contraseña) {
-      messages.value.push('Contraseña incorrecta')
-      return
-    }
-
-    localStorage.setItem('userId', user.id);
-
-    const roleData = await $fetch(`http://localhost:4000/api/roles/${user.role_id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    const role = roleData.role;
-
-    switch (role) {
-      case 'reader':
-        router.push('/reader/books/all')
-        break
-      case 'technician':
-        router.push('/technician/loans/all')
-        break
-      case 'dealer':
-        router.push('/dealer/deliveries/all')
-        break
-      default:
-        messages.value = ['Rol no reconocido']
-        break
-    }
-  } catch (error) {
-    messages.value = ['Error: '+ error]
+    await navigateTo(url.value)
+  } catch (error: any) {
+    messages.value.push('Error: ' + error.message);
   }
 }
 
 onMounted(() => {
   const savedData = localStorage.getItem(STORAGE_KEY)
   if(savedData){
-    Object.assign(form, JSON.parse(savedData));
+    Object.assign(form.usuario, JSON.parse(savedData));
   }
 });
 

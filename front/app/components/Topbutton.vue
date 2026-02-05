@@ -36,5 +36,6 @@ function goBack() {
   height: auto;
   font-family: 'Quicksand', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
   border-color: var(--accent-color);
+  z-index: 100000;
 }
 </style>

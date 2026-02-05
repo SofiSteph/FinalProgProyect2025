@@ -12,14 +12,14 @@
 import User from '~/layouts/User.vue'
 import Panel from '~/components/Panel.vue'
 import { messages, push } from '~/assets/messages'
-import { getDefaultNav } from '~/assets/getNav'
+import { getReaderNav } from '~/assets/getNav'
 
 useSeoMeta({
   title: 'Información',
   description: 'Vista de la información sobre la Biblioteca y sus servicios.'
 })
 
-const navItems = getDefaultNav()
+const navItems = getReaderNav()
 
 // Enlaces o rutas de las imágenes
 const imageSources = [

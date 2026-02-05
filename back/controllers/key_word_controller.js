@@ -1,5 +1,4 @@
-const KeyWord = require('../models/key_word');
-const Book = require('../models/book');
+const { KeyWord, Book } = require('../models/index');
 
 // Crear un KeyWord
 const createKeyWord = async ({ key_word_name }) => {
@@ -104,6 +103,28 @@ const associateBookWithKeyWord = async (book_id, keyword_id) => {
   }
 };
 
+// Obtener un KeyWord por nombre
+const getKeyWordByName = async (key_word_name) => {
+  try {
+    if (!key_word_name) {
+      throw new Error('key_word_name es requerido');
+    }
+
+    const keyWord = await KeyWord.findOne({
+      where: { key_word_name }
+    });
+
+    if (!keyWord) {
+      throw new Error('KeyWord no encontrado');
+    }
+
+    return keyWord;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error al obtener el KeyWord por nombre: ${error.message}`);
+  }
+};
+
 // Obtener todos los libros asociados a una palabra clave
 const getBooksByKeyWord = async (key_word_name) => {
   try {
@@ -134,5 +155,6 @@ module.exports = {
   updateKeyWord,
   deleteKeyWord,
   associateBookWithKeyWord,
-  getBooksByKeyWord
+  getBooksByKeyWord,
+  getKeyWordByName
 };

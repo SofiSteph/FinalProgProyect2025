@@ -67,7 +67,6 @@ import { messages } from '~/assets/messages'
 import FormsButtonSubmit from './FormsButtonSubmit.vue'
 import FormsList from './FormsList.vue'
 
-const theme = ref("light");
 const STORAGE_KEY = "localMemory"
 
 const form = reactive({

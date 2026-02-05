@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { createUser, getAllUsers, getUserById, updateUser, deleteUser, getUserByUsername, assignRoleToUser, getRandomDealer} = require("../controllers/user_controller");
+const { createUser, getAllUsers, getUserById, updateUser, deleteUser, getUserByUsername, assignRoleToUser, getRandomDealer, signIn, getSession, refreshToken} = require("../controllers/user_controller");
 const logger = require('../logger/logger');
 
 /**
@@ -80,6 +80,47 @@ router.get('/', async (req, res) => {
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ message: 'Error al obtener los Users', error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/users/session:
+ *   get:
+ *     summary: Get user session
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Session data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Invalid token
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/session', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Token requerido' });
+    }
+    const result = await getSession(token);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error(error.message);
+    if (error.message.includes('Usuario no encontrado') || error.message.includes('jwt')) {
+      res.status(401).json({ message: 'Sesión inválida' });
+    } else {
+      res.status(500).json({ message: 'Error al obtener sesión', error: error.message });
+    }
   }
 });
 
@@ -337,6 +378,104 @@ router.get('/random-dealer', async (req, res) => {
       res.status(404).json({ message: error.message });
     } else {
       res.status(500).json({ message: 'Error al obtener un dealer aleatorio', error: error.message });
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Sign in a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Sign in successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const result = await signIn(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error(error.message);
+    if (error.message.includes('Usuario no encontrado') || error.message.includes('Contraseña incorrecta')) {
+      res.status(401).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /api/users/refresh-token:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Token refreshed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *       401:
+ *         description: Invalid refresh token
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/refresh-token', async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'Refresh token requerido' });
+    }
+    const result = await refreshToken(refreshToken);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error(error.message);
+    if (error.message.includes('Token de refresco inválido')) {
+      res.status(401).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error al refrescar token', error: error.message });
     }
   }
 });

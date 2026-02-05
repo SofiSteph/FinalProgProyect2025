@@ -10,7 +10,7 @@
 import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
-import { getDefaultNav } from '~/assets/getNav'
+import { getReaderNav } from '~/assets/getNav'
 import { push } from '~/assets/messages'
 
 useSeoMeta({
@@ -20,7 +20,7 @@ useSeoMeta({
 
 push("Bienvenido a la sección de Entregas. Aquí puedes ver su información de las entregas (Ver) o cancelar su envío (Cancelar)")
 
-const navItems = getDefaultNav()
+const navItems = getReaderNav()
 const elements = ref([])
 const optionValues = ['Ver', 'Cancelar']
 const userId = ref(0)

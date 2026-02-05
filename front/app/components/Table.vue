@@ -22,6 +22,9 @@
       <FilterInput v-model="filterDate" placeholder="Filtrar por Fecha" />
       <FilterInput v-model="filterKeyword" placeholder="Filtrar por palabra clave" />
     </div>
+    <div v-if="route.path === '/technician/books/all'" class="button-container">
+      <Button @click="addBook"> </Button>
+    </div>
   </div>
 </template>
 
@@ -30,7 +33,9 @@ import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { messages } from '~/assets/messages'
 import FilterInput from '~/components/FilterInput.vue'
+import Button from './Button.vue'
 
+const { getSession } = useAuth()
 const router = useRouter()
 const route = useRoute()
 const userId = ref(0)
@@ -48,8 +53,11 @@ const props = defineProps({
 
 onMounted(async () => {
   if (!process.client) return
-     userId.value = parseInt(localStorage.getItem('userId'))
-  if (!userId) {
+  const session = await getSession()
+  if (session) {
+      const user = session
+      userId.value = user.id
+  } else {
      messages.value.push('Usuario no autenticado')
      return
   }
@@ -91,6 +99,10 @@ function handleFilterDate(date) {
 
 function handleFilterKeyword(keyword) {
   filterKeyword.value = keyword
+}
+
+function addBook(){
+  router.push({ path: `/technician/books/new`, query: { userId: userId.value } })
 }
 
 async function handleOptionClick(elem, optValue) {
@@ -221,6 +233,13 @@ async function handleOptionClick(elem, optValue) {
         }
     }  else if (optValue === 'Info' && route.path === '/dealer/deliveries/all') {
             router.push({ path: `/dealer/deliveries/${elem.id}`})
+    }  else if (optValue === 'Eliminar') {
+         await $fetch(`http://localhost:4000/api/books/delete/${elem.id}`, { method: 'DELETE' })
+         messages.value.push('Libro eliminado exitosamente');
+    } else if (optValue === 'Editar'  &&  route.path === '/technician/books/all'){
+         router.push({ path: `/technician/books/${elem.id}`})
+     } else if (optValue === 'Agregar'){
+          router.push({ path: `/technician/books/new`, query: { userId: userId.value} })
     }
 }
 </script>
@@ -285,6 +304,17 @@ async function handleOptionClick(elem, optValue) {
   flex-direction: column;
   gap: 10px;
   z-index: 1000;
+}
+
+.button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+
 }
 
 @media (max-width: 768px) {

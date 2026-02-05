@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const logger = require('../logger/logger');
-const { createKeyWord, getAllKeyWords, getKeyWordById, updateKeyWord, deleteKeyWord, associateBookWithKeyWord, getBooksByKeyWord } = require("../controllers/key_word_controller");
+const { createKeyWord, getAllKeyWords, getKeyWordById, updateKeyWord, deleteKeyWord, associateBookWithKeyWord, getBooksByKeyWord, getKeyWordByName } = require("../controllers/key_word_controller");
 
 /**
  * @swagger
@@ -112,6 +112,45 @@ router.get('/:id', async (req, res) => {
       res.status(404).json({ message: error.message });
     } else {
       res.status(500).json({ message: 'Error al obtener el KeyWord', error: error.message });
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /api/key_words/name/{key_word_name}:
+ *   get:
+ *     summary: Get a key word by name
+ *     tags: [KeyWords]
+ *     parameters:
+ *       - in: path
+ *         name: key_word_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Key word name
+ *     responses:
+ *       200:
+ *         description: KeyWord data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/KeyWord'
+ *       404:
+ *         description: KeyWord not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/name/:key_word_name', async (req, res) => {
+  try {
+    const result = await getKeyWordByName(req.params.key_word_name);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error(error.message);
+    if (error.message.includes('KeyWord no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error al obtener el KeyWord por nombre', error: error.message });
     }
   }
 });

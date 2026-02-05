@@ -40,6 +40,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { formatText } from '@/assets/formatText'
+import { messages } from '~/assets/messages'
+
+const { getSession } = useAuth()
 
 // Estado del sidebar
 const collapsed = ref(false)
@@ -47,8 +50,8 @@ const collapsed = ref(false)
 // Nueva capa de contracción más extrema
 const extremeCollapsed = ref(false)
 
-const userName = ref('')
-const userInfo = ref('')
+const userName = ref('Nombre de usuario')
+const userInfo = ref('Información del usuario')
 
 function toggle() {
   if (!collapsed.value) {
@@ -62,18 +65,15 @@ function toggle() {
 
 onMounted(async () => {
   if (!process.client) return
-  const userId = parseInt(localStorage.getItem('userId'))
-  if (userId) {
-    try {
-      const user = await $fetch(`http://localhost:4000/api/users/${userId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      userName.value = user.username
-      userInfo.value = formatText(`Nombre: ${user.name} ; Email: ${user.email}`)
-    } catch (error) {
-      console.error('Error fetching user info: ' + error.message)
+  try {
+    const session = await getSession()
+    if (session) {
+      const user = session
+      userName.value = user.nombre
+      userInfo.value = formatText(`Nombre: ${user.nombre} ; Email: ${user.email}`)
     }
+  } catch (error) {
+    console.error('Error fetching session: ' + error.message)
   }
 })
 

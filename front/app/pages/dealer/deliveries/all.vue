@@ -10,14 +10,14 @@
 import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
-import { getEmptyNav } from '~/assets/getNav'
+import { getDealerNav} from '~/assets/getNav'
 import { push } from '~/assets/messages'
 
 useSeoMeta({
   title: 'Entregas',
   description: 'Vista de todas las entregas de libros que atenderá el usuario repartidor',
 })
-const navItems = getEmptyNav()
+const navItems = getDealerNav()
 
 const elements = ref([])
 const optionValues = ['Cambiar', 'Info']

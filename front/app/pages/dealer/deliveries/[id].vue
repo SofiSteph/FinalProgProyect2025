@@ -71,7 +71,6 @@ const getReaderById = async (readerId) => {
   }
 }
 
-// Procesar cuando llegue la entrega
 watch(deliveryData, async (response) => {
   if (!response) return
 

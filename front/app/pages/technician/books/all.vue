@@ -10,7 +10,7 @@
 import { ref, watch, onMounted } from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
-import { getReaderNav } from '~/assets/getNav'
+import { getTechnicianNav } from '~/assets/getNav'
 import { push } from '~/assets/messages'
 import { useFetch } from '#imports' 
 
@@ -19,9 +19,9 @@ useSeoMeta({
   description: 'Vista de todos los libros existentes en la Biblioteca'
 })
 
-const navItems = getReaderNav()
+const navItems = getTechnicianNav()
 const elements = ref([])
-const optionValues = ['Ver', 'Obtener']
+const optionValues = ['Editar', 'Eliminar']
 
 const { data, error, refresh, pending } = useFetch('http://localhost:4000/api/books', {
   method: 'GET',
@@ -49,7 +49,7 @@ watch(data, (books) => {
 })
 
 onMounted(async () => {
-   push("Bienvenido a la sala de libros. Aquí puedes ver su información (Ver) y obtenerlos por medio de préstamos (Obtener) en caso de que lo desees")
+   push("Bienvenido a la sala de libros. Aquí puedes ver su información (Ver), editarlos (Editar) y eliminarlos (Eliminar) en caso de que lo desees")
 })
 </script>
 

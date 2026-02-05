@@ -48,6 +48,7 @@ const UserRoutes = require("./routes/user_routes");
 const LoanRoutes = require("./routes/loan_routes");
 const DeliveryRoutes = require("./routes/delivery_routes");
 const RoleRoutes = require("./routes/role_routes");
+const { refreshToken } = require("./controllers/user_controller");
 
 app.use('/api/book_rooms', BookRoomRoutes);
 app.use('/api/books', BookRoutes);
@@ -57,6 +58,25 @@ app.use('/api/users', UserRoutes);
 app.use('/api/loans', LoanRoutes);
 app.use('/api/deliveries', DeliveryRoutes);
 app.use('/api/roles', RoleRoutes);
+
+// Refresh token route
+app.post('/user/refresh-token', async (req, res) => {
+  try {
+    const { refreshToken: token } = req.body;
+    if (!token) {
+      return res.status(400).json({ message: 'Refresh token requerido' });
+    }
+    const result = await refreshToken(token);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    if (error.message.includes('Token de refresco inválido')) {
+      res.status(401).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error al refrescar token', error: error.message });
+    }
+  }
+});
 
 // 6) Manejador de errores
 app.use(errorHandler); 

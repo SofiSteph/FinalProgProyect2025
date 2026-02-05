@@ -10,7 +10,7 @@ import { computed } from 'vue'
 import { formatText } from '@/assets/formatText'
 
 const props = defineProps({
- text: String
+ text: String,
 })
 
 const formattedText = computed(() => formatText(props.text))

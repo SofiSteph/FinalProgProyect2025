@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const logger = require('../logger/logger');
-const { createMainAuthor, getAllMainAuthors, getMainAuthorById, updateMainAuthor, deleteMainAuthor, getBooksByMainAuthorId } = require("../controllers/main_author_controller");
+const { createMainAuthor, getAllMainAuthors, getMainAuthorById, updateMainAuthor, deleteMainAuthor, getBooksByMainAuthorId, getMainAuthorByName, associateBookWithAuthor } = require("../controllers/main_author_controller");
 
 /**
  * @swagger
@@ -256,6 +256,89 @@ router.delete('/delete/:id', async (req, res) => {
       res.status(404).json({ message: error.message });
     } else {
       res.status(500).json({ message: 'Error al eliminar el MainAuthor', error: error.message });
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /api/main_authors/by-name/{author_name}:
+ *   get:
+ *     summary: Get a main author by name
+ *     tags: [MainAuthors]
+ *     parameters:
+ *       - in: path
+ *         name: author_name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: MainAuthor name
+ *     responses:
+ *       200:
+ *         description: MainAuthor data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MainAuthor'
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/by-name/:author_name', async (req, res) => {
+  try {
+    const result = await getMainAuthorByName(req.params.author_name);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ message: 'Error al obtener el MainAuthor por nombre', error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/main_authors/associate:
+ *   post:
+ *     summary: Associate a book with a main author
+ *     tags: [MainAuthors]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *               - mainAuthorId
+ *             properties:
+ *               bookId:
+ *                 type: integer
+ *               mainAuthorId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Association successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: MainAuthor or Book not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/associate', async (req, res) => {
+  try {
+    const { bookId, mainAuthorId } = req.body;
+    const result = await associateBookWithAuthor(bookId, mainAuthorId);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error(error.message);
+    if (error.message.includes('MainAuthor no encontrado') || error.message.includes('Book no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error al asociar el libro con el autor', error: error.message });
     }
   }
 });

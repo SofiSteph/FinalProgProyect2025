@@ -10,12 +10,12 @@
 import { ref, watch} from 'vue'
 import Table from '~/components/Table.vue'
 import User from '~/layouts/User.vue'
-import { getEmptyNav } from '~/assets/getNav'
+import { getTechnicianNav } from '~/assets/getNav'
 import { push } from '~/assets/messages'
 import { useFetch, useSeoMeta } from '#imports'
 
 const optionValues = ['Info', 'Validar', 'Invalidar']
-const navItems = getEmptyNav()
+const navItems = getTechnicianNav()
 const elements = ref([])
 const userId = ref(null)
 

@@ -87,6 +87,18 @@ const deleteMainAuthor = async (id) => {
   }
 };
 
+// Obtener un MainAuthor por nombre
+const getMainAuthorByName = async (author_name) => {
+  try {
+    const mainAuthor = await MainAuthor.findOne({ where: { author_name } });
+    return mainAuthor;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error al obtener el MainAuthor por nombre: ${error.message}`);
+  }
+};
+
+
 // Obtener todos los libros asociados a un MainAuthor por ID
 const getBooksByMainAuthorId = async (id) => {
   try {
@@ -128,6 +140,7 @@ module.exports = {
   createMainAuthor,
   getAllMainAuthors,
   getMainAuthorById,
+  getMainAuthorByName,
   updateMainAuthor,
   deleteMainAuthor,
   getBooksByMainAuthorId,
