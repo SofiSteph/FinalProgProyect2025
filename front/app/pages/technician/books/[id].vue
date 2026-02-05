@@ -6,7 +6,7 @@
       <img :src="imageUrl"  alt="Libro" width="150" height="150" style="border-radius:50%; object-fit:cover;" @error="handleImageError">
     </div>
     
-    <FormBook @submit="handleSubmit" :initialForm="form" :storageKey="STORAGE_KEY">
+    <FormBook @submit="handleSubmit" :initialForm="form" :visibleImage="false">
       <template #buttons>
         <FormsButtonLink to="/technician/books/all" text="Volver"/>
         <FormsButtonSubmit />
@@ -211,7 +211,7 @@ async function handleSubmit() {
       book_name: form.title,
       year_written: parseInt(form.year, 10),
       available_copies: parseInt(form.copies, 10),
-      image: form.image,
+      image: imageUrl.value,
     };
     
     try{

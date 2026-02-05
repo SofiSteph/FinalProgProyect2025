@@ -26,7 +26,7 @@
         <FormsInput id="copias" v-model="form.copies" type="number" placeholder="Copias disponibles" />
       </div>
 
-      <div class="mb-6 buttons">
+      <div class="mb-6 buttons " v-if="visibleImage === true">
         <FormsInput id="image" type="file" placeholder="Imagen" @change="handleImageChange" />
       </div>
 
@@ -43,7 +43,7 @@ import FormsInput from './FormsInput.vue';
 
 const props = defineProps<{
   initialForm?: Record<string, any>
-  storageKey?: string
+  visibleImage?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -62,18 +62,6 @@ const form = reactive({
 onMounted(() => {
   if (props.initialForm) {
     Object.assign(form, props.initialForm)
-  }
-  if (props.storageKey && process.client) {
-    const saved = localStorage.getItem(props.storageKey)
-    if (saved) {
-      Object.assign(form, JSON.parse(saved))
-    }
-  }
-})
-
-watch(form, (newData) => {
-  if (props.storageKey && process.client) {
-    localStorage.setItem(props.storageKey, JSON.stringify(newData))
   }
 })
 

@@ -6,7 +6,7 @@
       <img src="/book.png" alt="Avatar" width="150" height="150" style="border-radius:50%; object-fit:cover;">
     </div>
     
-    <FormBook @submit="handleSubmit" :initialForm="form" :storageKey="STORAGE_KEY">
+    <FormBook @submit="handleSubmit" :initialForm="form" :visibleImage="true">
       <template #buttons>
         <FormsButtonLink to="/technician/books/all" text="Volver"/>
         <FormsButtonSubmit />
@@ -47,20 +47,6 @@ const form = reactive({
   year: ''
 })
 
-onMounted(async () => {
-  if (process.client) {
-    const savedData = localStorage.getItem(STORAGE_KEY)
-    if(savedData){
-      Object.assign(form, JSON.parse(savedData));
-    }
-  }
-});
-
-watch(form, (newData) => {
-  if (process.client) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
-  }
-});
 
 async function getRoomId() {
   try {
@@ -72,29 +58,28 @@ async function getRoomId() {
   }
 }
 
-async function handleSubmit() {
-
+async function handleSubmit(formData: { title: string; authors: { name: string; country: string }[]; keywords: string; copies: string; image: File | null; year: string }) {
   try {
-    const book_room_id = await getRoomId(); 
+    const book_room_id = await getRoomId();
 
-    const formData = new FormData();
-    formData.append('book_name', form.title);
-    formData.append('year_written', form.year);
-    formData.append('available_copies', String(form.copies));
-    formData.append('book_room_id', String(book_room_id));
-    if (form.image) {
-      formData.append('productImage', form.image);
+    const formDataObj = new FormData();
+    formDataObj.append('book_name', formData.title);
+    formDataObj.append('year_written', formData.year);
+    formDataObj.append('available_copies', String(formData.copies));
+    formDataObj.append('book_room_id', String(book_room_id));
+    if (formData.image) {
+      formDataObj.append('productImage', formData.image);
     }
 
     const book = await $fetch(`${config.public.backend_url}/api/books/create`, {
       method: 'POST',
-      body: formData
-    }) as any;
+      body: formDataObj
+    }) as { data: { id: number } };
 
     let bookId = book.data.id
 
     // Recorrer la lista de autores introducidos
-    for (const author of form.authors) {
+    for (const author of formData.authors) {
       if (!author.name) continue; // Saltar autores vacíos
 
       // Verificar si el autor existe en la base de datos
@@ -129,8 +114,7 @@ async function handleSubmit() {
           })
         });
 
-    const keywords = form.keywords.split(',').map(k => k.trim()).filter(k => k);
-    push(keywords.toString())
+    const keywords = formData.keywords.split(',').map(k => k.trim()).filter(k => k);
     // Recorrer la lista de palabras clave introducidas
     if(keywords.length>0){
     for (const keyword of keywords) {
@@ -169,7 +153,8 @@ async function handleSubmit() {
           headers: { 'Content-Type': 'application/json' }
         });
     }}
-
+    
+    push('Libro agregado correctamente');
     await navigateTo('/technician/books/all');
 
     }
